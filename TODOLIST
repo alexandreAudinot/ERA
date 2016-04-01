@@ -1,0 +1,11 @@
+En vrac :
+
+Parser les tickets de caisse
+Interface graphique, dont  l'affichage des itemsets et des règles
+Extraire les itemsets fréquents
+Utiliser les itemsets fréquents pour construire les règles.
+Tests unitaires et globaux
+Pouvoir traiter des itemsets fréquents, clos, ou maximaux
+Comparaison avec Weka
+Compte-rendu
+Présentation powerpoint
