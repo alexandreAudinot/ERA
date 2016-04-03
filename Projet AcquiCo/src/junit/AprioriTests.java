@@ -1,24 +1,23 @@
 package junit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import algorithm.APriori;
-import algorithm.Itemset;
 
 public class AprioriTests {
 	
 	private APriori apriori;
 	
-	private final double MINSUP = 2/9;
+	private final double MINSUP = 2./9;
 	
-	
-
 	@Before
 	public void setUp() throws Exception {
 		apriori = new APriori(MINSUP, getExampleTransactions());
@@ -26,8 +25,8 @@ public class AprioriTests {
 
 	@Test
 	public void testGetItems() {
-		List<String> itemsResult = apriori.getAllItems(); 
-		List<String> itemsExpected = new LinkedList<String>();
+		Set<String> itemsResult = apriori.getAllItems(); 
+		Set<String> itemsExpected = new HashSet<String>();
 		
 		for (int i = 1 ; i <= 5 ; i++) {
 			itemsExpected.add("i" + i);
@@ -37,67 +36,80 @@ public class AprioriTests {
 		assertTrue(itemsExpected.containsAll(itemsResult));
 	}
 	
-	private List<Itemset> getExampleTransactions() {
-		List<Itemset> res = new LinkedList<Itemset>();
+	@Test
+	public void testStep1() {
 		
-		Itemset i;
+		Set<Set<String>> frequentItemsets = apriori.getFrequentItemsets();
 		
-		i = new Itemset();
-		i.addItem("i1");
-		i.addItem("i2");
-		i.addItem("i5");
+		System.out.println("All frequent sets :");
+		for (Set<String> set : frequentItemsets) {
+			System.out.println(set);
+		}
+		
+		assertTrue(frequentItemsets.size() == 13);
+	}
+	
+	private List<Set<String>> getExampleTransactions() {
+		List<Set<String>> res = new LinkedList<Set<String>>();
+		
+		Set<String> i;
+		
+		i = new HashSet<String>();
+		i.add("i1");
+		i.add("i2");
+		i.add("i5");
 		res.add(i);
 		
 
-		i = new Itemset();
-		i.addItem("i2");
-		i.addItem("i4");
+		i = new HashSet<String>();
+		i.add("i2");
+		i.add("i4");
 		res.add(i);
 		
 
-		i = new Itemset();
-		i.addItem("i2");
-		i.addItem("i3");
+		i = new HashSet<String>();
+		i.add("i2");
+		i.add("i3");
 		res.add(i);
 		
 
-		i = new Itemset();
-		i.addItem("i1");
-		i.addItem("i2");
-		i.addItem("i4");
+		i = new HashSet<String>();
+		i.add("i1");
+		i.add("i2");
+		i.add("i4");
 		res.add(i);
 		
 
-		i = new Itemset();
-		i.addItem("i1");
-		i.addItem("i3");
+		i = new HashSet<String>();
+		i.add("i1");
+		i.add("i3");
 		res.add(i);
 		
 
-		i = new Itemset();
-		i.addItem("i2");
-		i.addItem("i3");
+		i = new HashSet<String>();
+		i.add("i2");
+		i.add("i3");
 		res.add(i);
 		
 
-		i = new Itemset();
-		i.addItem("i1");
-		i.addItem("i3");
+		i = new HashSet<String>();
+		i.add("i1");
+		i.add("i3");
 		res.add(i);
 		
 
-		i = new Itemset();
-		i.addItem("i1");
-		i.addItem("i2");
-		i.addItem("i3");
-		i.addItem("i5");
+		i = new HashSet<String>();
+		i.add("i1");
+		i.add("i2");
+		i.add("i3");
+		i.add("i5");
 		res.add(i);
 		
 
-		i = new Itemset();
-		i.addItem("i1");
-		i.addItem("i2");
-		i.addItem("i3");
+		i = new HashSet<String>();
+		i.add("i1");
+		i.add("i2");
+		i.add("i3");
 		res.add(i);
 		
 		
