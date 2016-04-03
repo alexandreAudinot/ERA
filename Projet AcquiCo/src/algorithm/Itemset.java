@@ -1,12 +1,13 @@
 package algorithm;
 
+import java.util.LinkedList;
 import java.util.List;
 
-public class Transaction {
+public class Itemset {
 	List<String> items;
 
-	public Transaction() {
-		
+	public Itemset() {
+		items = new LinkedList<String>();
 	}
 	
 	public void addItem(String item) {
