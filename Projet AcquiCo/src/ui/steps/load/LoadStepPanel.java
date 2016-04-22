@@ -12,7 +12,7 @@ public class LoadStepPanel extends JPanel {
     private onFileChosen onFileChosenListener;
 
     public LoadStepPanel() {
-        fileChooser = new JFileChooser();
+        fileChooser = new JFileChooser(".");
         fileChooser.setMultiSelectionEnabled(false);
 
         JPanel panelCenter = new JPanel();
