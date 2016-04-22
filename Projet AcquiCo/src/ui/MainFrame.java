@@ -4,6 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
+import javax.swing.WindowConstants;
+
 import parser.FileParser;
 import parser.TransactionList;
 import ui.steps.config.ConfigStepPanel;
@@ -11,8 +19,7 @@ import ui.steps.config.OnStartAlgo;
 import ui.steps.load.LoadStepPanel;
 import ui.steps.load.OnFileChosen;
 import ui.steps.result.ResultStepPanel;
-
-import javax.swing.*;
+import algorithm.APriori;
 
 public class MainFrame extends JFrame {
 
@@ -111,9 +118,7 @@ public class MainFrame extends JFrame {
         configStepPanel.setOnStartAlgo(new OnStartAlgo() {
             @Override
             public void startAlgo(double minsup) {
-                System.out.println(minsup);
-                //new Algo.start(transactions, minsup);
-
+                System.out.println(new APriori(minsup, transactions).getFrequentItemsets());
             }
         });
 

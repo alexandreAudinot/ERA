@@ -10,6 +10,8 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
+import parser.Transaction;
+import parser.TransactionList;
 import algorithm.APriori;
 
 public class AprioriTests {
@@ -49,64 +51,55 @@ public class AprioriTests {
 		assertTrue(frequentItemsets.size() == 13);
 	}
 	
-	private List<Set<String>> getExampleTransactions() {
-		List<Set<String>> res = new LinkedList<Set<String>>();
+	private TransactionList getExampleTransactions() {
+		TransactionList res = new TransactionList();
 		
-		Set<String> i;
-		
-		i = new HashSet<String>();
+		Transaction i;
+		i = new Transaction();
 		i.add("i1");
 		i.add("i2");
 		i.add("i5");
 		res.add(i);
 		
-
-		i = new HashSet<String>();
+		i = new Transaction();
 		i.add("i2");
 		i.add("i4");
 		res.add(i);
 		
-
-		i = new HashSet<String>();
+		i = new Transaction();
 		i.add("i2");
 		i.add("i3");
 		res.add(i);
 		
-
-		i = new HashSet<String>();
+		i = new Transaction();
 		i.add("i1");
 		i.add("i2");
 		i.add("i4");
 		res.add(i);
 		
-
-		i = new HashSet<String>();
+		i = new Transaction();
 		i.add("i1");
 		i.add("i3");
 		res.add(i);
 		
-
-		i = new HashSet<String>();
+		i = new Transaction();
 		i.add("i2");
 		i.add("i3");
 		res.add(i);
 		
-
-		i = new HashSet<String>();
+		i = new Transaction();
 		i.add("i1");
 		i.add("i3");
 		res.add(i);
 		
-
-		i = new HashSet<String>();
+		i = new Transaction();
 		i.add("i1");
 		i.add("i2");
 		i.add("i3");
 		i.add("i5");
 		res.add(i);
 		
-
-		i = new HashSet<String>();
+		i = new Transaction();
 		i.add("i1");
 		i.add("i2");
 		i.add("i3");

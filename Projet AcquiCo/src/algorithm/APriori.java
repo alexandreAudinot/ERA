@@ -2,11 +2,13 @@ package algorithm;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+import parser.Transaction;
+import parser.TransactionList;
+
 public class APriori {
-	private List<Set<String>> allTransactions;
+	private TransactionList allTransactions;
 
 	private final Set<String> allItems;
 
@@ -17,7 +19,7 @@ public class APriori {
 	 * @param minsup ex : 2/9, not 2
 	 * @param transactions
 	 */
-	public APriori(double minsup, List<Set<String>> transactions) {
+	public APriori(double minsup, TransactionList transactions) {
 		this.MINSUP = minsup;
 		this.allTransactions = transactions;
 
@@ -28,8 +30,8 @@ public class APriori {
 	private Set<String> deduceAllKnownItems() {
 		Set<String> items = new HashSet<String>();
 
-		for (Set<String> t : this.allTransactions) {
-			for (String i : t) {
+		for (Transaction t : this.allTransactions) {
+			for (String i : t.getSet()) {
 				if (! items.contains(i)) {
 					items.add(i);
 				}
@@ -93,8 +95,8 @@ public class APriori {
 	public double support(Collection<String> itemset)  {
 		int res = 0;
 
-		for (Set<String> t : this.allTransactions) {
-			if (t.containsAll(itemset)) {
+		for (Transaction t : this.allTransactions) {
+			if (t.getSet().containsAll(itemset)) {
 				res++;
 			}
 		}
