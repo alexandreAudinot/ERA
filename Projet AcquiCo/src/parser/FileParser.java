@@ -8,29 +8,28 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class FileParser {
+
 	public TransactionList readFile(String fileName)
 	{
-		TransactionList itemSet = new TransactionList();
+		TransactionList transactionList = new TransactionList();
 		Charset charset = Charset.forName("US-ASCII");
 		Path file = Paths.get(fileName);
 		try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
 		    String line = reader.readLine();
-		    itemSet.setTitles(line);
+		    transactionList.setTitles(line);
 		    while ((line = reader.readLine()) != null) {
-		    	Transaction item = extractSet(line);
-		        itemSet.add(item);
+		    	Transaction transaction = extractSet(line);
+		        transactionList.add(transaction);
 		    }
 		} catch (IOException x) {
 		    System.err.format("IOException: %s%n", x);
 		}
 		
-		return itemSet;
+		return transactionList;
 	}
 	
 	private Transaction extractSet(String line)
 	{
-        System.out.println(line);
-        
 		Transaction item = new Transaction();
 		String[] elements = line.split("\t");
 		
@@ -39,11 +38,5 @@ public class FileParser {
 		}
 
 		return item;
-	}
-	
-	public static void main(String[] args)
-	{
-		FileParser parser = new FileParser();
-		parser.readFile("tickets_de_caisse.txt");
 	}
 }

@@ -1,5 +1,7 @@
 package ui;
 
+import parser.FileParser;
+import parser.TransactionList;
 import ui.steps.config.ConfigStepPanel;
 import ui.steps.load.LoadStepPanel;
 import ui.steps.result.ResultStepPanel;
@@ -8,21 +10,20 @@ import javax.swing.*;
 
 public class MainFrame extends JFrame {
 
-    public static void main(String[] args) {
-        new MainFrame().start();
-    }
-
     //steps
     private LoadStepPanel loadStepPanel;
     private ConfigStepPanel configStepPanel;
     private ResultStepPanel resultStepPanel;
+
+    //parser
+    private FileParser parser = new FileParser();
 
     private JTabbedPane tabbedPane;
     private JMenuBar menuBar;
     private JMenuItem quit;
     private JMenuItem aPropos;
 
-    private void start() {
+    public void start() {
         setLocationRelativeTo(null);
         setSize(500, 350);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -77,7 +78,8 @@ public class MainFrame extends JFrame {
 
         //Load Panel
         loadStepPanel.setOnFileChosenListener(selectedFile ->  {
-            JOptionPane.showMessageDialog(MainFrame.this, selectedFile.getAbsolutePath());
+            TransactionList transactions = parser.readFile(selectedFile.getAbsolutePath());
+            JOptionPane.showMessageDialog(MainFrame.this, "TransactionList.size:" + transactions.size());
             allowSteps(true, true, false);
         });
 
