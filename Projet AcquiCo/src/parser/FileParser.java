@@ -16,10 +16,16 @@ public class FileParser {
 		Path file = Paths.get(fileName);
 		try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
 		    String line = reader.readLine();
-		    transactionList.setTitles(line);
+		    String[] titles = line.split("\t");
 		    while ((line = reader.readLine()) != null) {
-		    	Transaction transaction = extractSet(line);
-		        transactionList.add(transaction);
+		    	String[] elements = line.split("\t");
+		    	Transaction transaction = new Transaction();
+		    	for(int i=0; i<elements.length; i++) {
+		    		String elem = elements[i];
+		    		String title = titles[i];
+		    		transaction.add(title + "=" + elem);
+		    	}
+		    	transactionList.add(transaction);
 		    }
 		} catch (IOException x) {
 		    System.err.format("IOException: %s%n", x);
@@ -39,4 +45,5 @@ public class FileParser {
 
 		return item;
 	}
+	
 }

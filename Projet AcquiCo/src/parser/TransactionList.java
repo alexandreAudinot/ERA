@@ -3,9 +3,5 @@ package parser;
 import java.util.ArrayList;
 
 public class TransactionList extends ArrayList<Transaction> {
-    private String[] titles;
-
-    public void setTitles(String titles) {
-        this.titles = titles.split("\t");
-    }
+	private static final long serialVersionUID = -8878030961190729009L;
 }
