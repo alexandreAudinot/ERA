@@ -9,7 +9,7 @@ public class LoadStepPanel extends JPanel {
     private JLabel stateLabel;
     private JButton loadButton;
     private final JFileChooser fileChooser;
-    private onFileChosen onFileChosenListener;
+    private OnFileChosen onFileChosenListener;
 
     public LoadStepPanel() {
         fileChooser = new JFileChooser(".");
@@ -42,7 +42,7 @@ public class LoadStepPanel extends JPanel {
 		});
     }
 
-    public void setOnFileChosenListener(onFileChosen onFileChosenListener) {
+    public void setOnFileChosenListener(OnFileChosen onFileChosenListener) {
         this.onFileChosenListener = onFileChosenListener;
     }
 }

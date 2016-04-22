@@ -7,8 +7,9 @@ import java.io.File;
 import parser.FileParser;
 import parser.TransactionList;
 import ui.steps.config.ConfigStepPanel;
+import ui.steps.config.OnStartAlgo;
 import ui.steps.load.LoadStepPanel;
-import ui.steps.load.onFileChosen;
+import ui.steps.load.OnFileChosen;
 import ui.steps.result.ResultStepPanel;
 
 import javax.swing.*;
@@ -22,6 +23,9 @@ public class MainFrame extends JFrame {
 
     //parser
     private FileParser parser = new FileParser();
+
+    //model
+    private TransactionList transactions;
 
     private JTabbedPane tabbedPane;
     private JMenuBar menuBar;
@@ -94,20 +98,27 @@ public class MainFrame extends JFrame {
 		});
 
         //Load Panel
-        loadStepPanel.setOnFileChosenListener(new onFileChosen() {
+        loadStepPanel.setOnFileChosenListener(new OnFileChosen() {
 			@Override
 			public void fileChosen(File selectedFile) {
-				TransactionList transactions = parser.readFile(selectedFile.getAbsolutePath());
+				transactions = parser.readFile(selectedFile.getAbsolutePath());
 	            JOptionPane.showMessageDialog(MainFrame.this, "TransactionList.size:" + transactions.size());
-	            allowSteps(true, true, false);
+	            allowSteps(true, true, false, 1);
 			}
 		});
 
         //Config Panel
+        configStepPanel.setOnStartAlgo(new OnStartAlgo() {
+            @Override
+            public void startAlgo(double minsup) {
+                System.out.println(minsup);
+                //new Algo.start(transactions, minsup);
+
+            }
+        });
 
         //Result Panel
     }
-
 
     public void allowSteps(boolean loadStep, boolean configStep, boolean resulStep) {
         tabbedPane.setEnabledAt(0, loadStep);
