@@ -1,9 +1,14 @@
 package ui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+
 import parser.FileParser;
 import parser.TransactionList;
 import ui.steps.config.ConfigStepPanel;
 import ui.steps.load.LoadStepPanel;
+import ui.steps.load.onFileChosen;
 import ui.steps.result.ResultStepPanel;
 
 import javax.swing.*;
@@ -73,15 +78,30 @@ public class MainFrame extends JFrame {
 
     private void bindEvents() {
         //Menu
-        quit.addActionListener(e -> MainFrame.this.dispose());
-        aPropos.addActionListener(e ->  JOptionPane.showMessageDialog(MainFrame.this, "...", "A propos", JOptionPane.INFORMATION_MESSAGE));
+        quit.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				MainFrame.this.dispose();
+			}
+		});
+        aPropos.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(MainFrame.this, "...", "A propos", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
 
         //Load Panel
-        loadStepPanel.setOnFileChosenListener(selectedFile ->  {
-            TransactionList transactions = parser.readFile(selectedFile.getAbsolutePath());
-            JOptionPane.showMessageDialog(MainFrame.this, "TransactionList.size:" + transactions.size());
-            allowSteps(true, true, false);
-        });
+        loadStepPanel.setOnFileChosenListener(new onFileChosen() {
+			@Override
+			public void fileChosen(File selectedFile) {
+				TransactionList transactions = parser.readFile(selectedFile.getAbsolutePath());
+	            JOptionPane.showMessageDialog(MainFrame.this, "TransactionList.size:" + transactions.size());
+	            allowSteps(true, true, false);
+			}
+		});
 
         //Config Panel
 

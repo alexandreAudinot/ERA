@@ -2,6 +2,8 @@ package ui.steps.load;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class LoadStepPanel extends JPanel {
     private JLabel stateLabel;
@@ -28,12 +30,16 @@ public class LoadStepPanel extends JPanel {
     }
 
     private void bindEvents() {
-        loadButton.addActionListener(e -> {
-            if(fileChooser.showOpenDialog(LoadStepPanel.this) == JFileChooser.APPROVE_OPTION && onFileChosenListener != null) {
-                stateLabel.setText("Fichier chargé: " + fileChooser.getSelectedFile().getName());
-                onFileChosenListener.fileChosen(fileChooser.getSelectedFile());
-            }
-        });
+        loadButton.addActionListener(new ActionListener() {
+			 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(fileChooser.showOpenDialog(LoadStepPanel.this) == JFileChooser.APPROVE_OPTION && onFileChosenListener != null) {
+	                stateLabel.setText("Fichier chargé: " + fileChooser.getSelectedFile().getName());
+	                onFileChosenListener.fileChosen(fileChooser.getSelectedFile());
+	            }
+			}
+		});
     }
 
     public void setOnFileChosenListener(onFileChosen onFileChosenListener) {
