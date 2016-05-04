@@ -3,6 +3,10 @@ package ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -12,6 +16,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
 
+import algorithm.APriori;
+import algorithm.Rule;
 import parser.FileParser;
 import parser.TransactionList;
 import ui.steps.config.ConfigStepPanel;
@@ -19,7 +25,6 @@ import ui.steps.config.OnStartAlgo;
 import ui.steps.load.LoadStepPanel;
 import ui.steps.load.OnFileChosen;
 import ui.steps.result.ResultStepPanel;
-import algorithm.APriori;
 
 public class MainFrame extends JFrame {
 
@@ -118,7 +123,19 @@ public class MainFrame extends JFrame {
         configStepPanel.setOnStartAlgo(new OnStartAlgo() {
             @Override
             public void startAlgo(double minsup) {
-                System.out.println(new APriori(minsup, transactions).getFrequentItemsets());
+                Set<Rule> rules = new APriori(minsup, 0, transactions).generateRules();
+                ArrayList<Rule> sortedRules = new ArrayList<Rule>(rules.size());
+                sortedRules.addAll(rules);
+                Collections.sort(sortedRules, new Comparator<Rule>() {
+                    @Override
+                    public int compare(Rule o1, Rule o2) {
+                        return (int) (o2.getConf()*1000 - o1.getConf()*1000); //TODO: improve...
+                    }
+                });
+
+
+                for(Rule r : sortedRules)
+                    System.out.println(r.getConf() + "::" + r.toString());
             }
         });
 

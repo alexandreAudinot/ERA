@@ -19,10 +19,11 @@ public class AprioriTests {
 	private APriori apriori;
 	
 	private final double MINSUP = 2./9;
+	private final double MINCONF = 2./9;
 	
 	@Before
 	public void setUp() throws Exception {
-		apriori = new APriori(MINSUP, getExampleTransactions());
+		apriori = new APriori(MINSUP,  MINCONF, getExampleTransactions());
 	}
 
 	@Test

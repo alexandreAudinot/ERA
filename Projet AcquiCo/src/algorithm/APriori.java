@@ -1,5 +1,6 @@
 package algorithm;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,14 +14,17 @@ public class APriori {
 	private final Set<String> allItems;
 
 	private final double MINSUP;
+	
+	private final double MINCONF;
 
 	/**
 	 * 
 	 * @param minsup ex : 2/9, not 2
 	 * @param transactions
 	 */
-	public APriori(double minsup, TransactionList transactions) {
+	public APriori(double minsup, double minconf, TransactionList transactions) {
 		this.MINSUP = minsup;
+		this.MINCONF = minconf;
 		this.allTransactions = transactions;
 
 		this.allItems = this.deduceAllKnownItems();
@@ -110,5 +114,60 @@ public class APriori {
 
 	public Set<String> getAllItems() {
 		return allItems;
+	}
+	
+	
+
+	/**
+	 * Second step of the a priori algorithm
+	 * @return 
+	 */
+	public Set<Rule> generateRules(){
+		Set<Set<String>> frequents = getFrequentItemsets();
+		Set<Rule> ruleList = new HashSet<Rule>();
+
+		//For each kitemset frequent
+		for (Set<String> f : frequents) {
+			ArrayList<String> kitemset = new ArrayList<>(f.size());
+			kitemset.addAll(f);
+
+			//If this is a frequent k-itemset with k > 1 (at least 2 item)
+			if (f.size() >= 2){
+				int m = 0;
+
+				//for each element, isolate it and create the rule
+				while (m<f.size()){
+					String to = kitemset.get(m);
+					ArrayList<String> from = ((ArrayList<String>) kitemset.clone());
+					from.remove(m);
+
+					double conf = getConf(from, to);
+					if(conf >= MINCONF)
+						ruleList.add(new Rule(from, to, conf));
+
+					m++;
+				}
+			}
+		}
+		
+		return ruleList;
+	}
+
+	private double getConf(Collection<String> from, String to) {
+		double nbFrom = 0, nbAll = 0;
+
+		ArrayList<String> all = new ArrayList<>(from.size() + 1);
+		all.addAll(from);
+		all.add(to);
+
+		for (Transaction t : this.allTransactions) {
+			if(t.getSet().containsAll(from))
+				nbFrom++;
+
+			if(t.getSet().containsAll(all))
+				nbAll++;
+		}
+
+		return nbAll / nbFrom;
 	}
 }
