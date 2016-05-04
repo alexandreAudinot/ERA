@@ -114,7 +114,6 @@ public class MainFrame extends JFrame {
 			@Override
 			public void fileChosen(File selectedFile) {
 				transactions = parser.readFile(selectedFile.getAbsolutePath());
-	            JOptionPane.showMessageDialog(MainFrame.this, "TransactionList.size:" + transactions.size());
 	            allowSteps(true, true, false, 1);
 			}
 		});
@@ -122,20 +121,13 @@ public class MainFrame extends JFrame {
         //Config Panel
         configStepPanel.setOnStartAlgo(new OnStartAlgo() {
             @Override
-            public void startAlgo(double minsup) {
-                Set<Rule> rules = new APriori(minsup, 0, transactions).generateRules();
+            public void startAlgo(double minsup, double minconf) {
+                Set<Rule> rules = new APriori(minsup, minconf, transactions).generateRules();
                 ArrayList<Rule> sortedRules = new ArrayList<Rule>(rules.size());
                 sortedRules.addAll(rules);
-                Collections.sort(sortedRules, new Comparator<Rule>() {
-                    @Override
-                    public int compare(Rule o1, Rule o2) {
-                        return (int) (o2.getConf()*1000 - o1.getConf()*1000); //TODO: improve...
-                    }
-                });
-
-
-                for(Rule r : sortedRules)
-                    System.out.println(r.getConf() + "::" + r.toString());
+                Rule.sortByConfidence(sortedRules);
+                resultStepPanel.setModel(sortedRules);
+                allowSteps(true, true, true, 2);
             }
         });
 

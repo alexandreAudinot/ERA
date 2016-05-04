@@ -142,8 +142,9 @@ public class APriori {
 					from.remove(m);
 
 					double conf = getConf(from, to);
+					double lift = getLift(from, to);
 					if(conf >= MINCONF)
-						ruleList.add(new Rule(from, to, conf));
+						ruleList.add(new Rule(from, to, conf, lift));
 
 					m++;
 				}
@@ -169,5 +170,26 @@ public class APriori {
 		}
 
 		return nbAll / nbFrom;
+	}
+
+	private double getLift(Collection<String> from, String to) {
+		double nbFrom = 0, nbAll = 0, nbTo = 0;
+
+		ArrayList<String> all = new ArrayList<>(from.size() + 1);
+		all.addAll(from);
+		all.add(to);
+
+		for (Transaction t : this.allTransactions) {
+			if(t.getSet().containsAll(from))
+				nbFrom++;
+
+			if(t.getSet().contains(to))
+				nbTo++;
+
+			if(t.getSet().containsAll(all))
+				nbAll++;
+		}
+
+		return allTransactions.size() * nbAll / (nbFrom * nbTo);
 	}
 }
