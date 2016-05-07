@@ -113,7 +113,12 @@ public class MainFrame extends JFrame {
         loadStepPanel.setOnFileChosenListener(new OnFileChosen() {
 			@Override
 			public void fileChosen(File selectedFile) {
-				transactions = parser.readFile(selectedFile.getAbsolutePath());
+				TransactionList transactionstmp = parser.readFile(selectedFile.getAbsolutePath());
+				// Pour chaque attribut numérique, on lui donne un nombre d'attributs booléens
+				int[] tab = {4,2,2,2};
+				transactions = parser.allNumToBool(transactionstmp, tab);
+				transactions.toString();
+				
 	            allowSteps(true, true, false, 1);
 			}
 		});
