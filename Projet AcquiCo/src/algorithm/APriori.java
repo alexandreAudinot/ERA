@@ -1,5 +1,7 @@
 package algorithm;
 
+import java.beans.FeatureDescriptor;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -16,6 +18,8 @@ public class APriori {
 	private final double MINSUP;
 	
 	private final double MINCONF;
+	
+	private Set<Set<String>> frequents;
 
 	/**
 	 * 
@@ -123,7 +127,7 @@ public class APriori {
 	 * @return 
 	 */
 	public Set<Rule> generateRules(){
-		Set<Set<String>> frequents = getFrequentItemsets();
+		frequents = getFrequentItemsets();
 		Set<Rule> ruleList = new HashSet<Rule>();
 
 		//For each kitemset frequent
@@ -154,6 +158,29 @@ public class APriori {
 		return ruleList;
 	}
 
+	public ArrayList<ArrayList<String>> getClosedFrequetItemsets(){
+		ArrayList<ArrayList<String>> freq = new ArrayList<>();
+		for(Set<String> s : frequents){
+			freq.add(new ArrayList<String>(s));
+		}		
+		ArrayList<ArrayList<String>> res = new ArrayList<>();
+		for(int i = 0; i < freq.size(); i++){
+			for(int j = 0; j < freq.size(); j++){
+				if(i!=j){
+					if(freq.get(j).containsAll(freq.get(i))){
+						if(support(freq.get(i)) > support(freq.get(j))){
+							if(!res.contains(freq.get(i)))
+							res.add(freq.get(i));
+						}else{
+							res.remove(freq.get(i));
+						}
+					}
+				}
+			}
+		}
+		return res;
+	}
+	
 	private double getConf(Collection<String> from, String to) {
 		double nbFrom = 0, nbAll = 0;
 
