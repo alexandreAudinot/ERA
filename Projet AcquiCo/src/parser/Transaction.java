@@ -16,7 +16,7 @@ public class Transaction {
         set.add(s);
     }
 
-    public ArrayList<String> getSet() {
+    public ArrayList<String> getValues() {
         return set;
     }
     

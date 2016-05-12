@@ -11,12 +11,11 @@ import java.util.ArrayList;
 import org.apache.commons.lang.math.NumberUtils;
 
 public class FileParser {
-	
-	public static ArrayList<String> attributesName = new ArrayList<String>();
-	public static ArrayList<Boolean> isNumericAttributes = new ArrayList<Boolean>();
 
 	public TransactionList readFile(String fileName)
 	{
+		ArrayList<String> attributesName = new ArrayList<String>();
+		ArrayList<Boolean> isNumericAttributes = new ArrayList<Boolean>();
 		TransactionList transactionList = new TransactionList();
 		Charset charset = Charset.forName("US-ASCII");
 		Path file = Paths.get(fileName);
@@ -31,7 +30,8 @@ public class FileParser {
 		    		String elem = elements[i];
 		    		String title = titles[i];
 		    		if(isFirstValuedLine){
-		    			isNumericAttributes.add(NumberUtils.isNumber(elem));
+						boolean isNumeric = NumberUtils.isNumber(elem);
+		    			isNumericAttributes.add(isNumeric);
 		    			attributesName.add(title);
 		    		}
 		    		transaction.add(title + "=" + elem);
@@ -43,6 +43,8 @@ public class FileParser {
 		} catch (IOException x) {
 		    System.err.format("IOException: %s%n", x);
 		}
+		transactionList.setAttributesName(attributesName);
+		transactionList.setIsNumericAttributes(isNumericAttributes);
 		return transactionList;
 	}
 	
@@ -61,14 +63,14 @@ public class FileParser {
 	// When an attribute is numeric, add nbAttr boolean attributes and remove the numeric one
 	public TransactionList numericAttrToBool(TransactionList tl, String s, int nbAttr){
 		TransactionList res = new TransactionList();
-		int j = attributesName.indexOf(s);
-		if ((j != -1) && (isNumericAttributes.get(j) == true)){
+		int j = tl.getAttributesName().indexOf(s);
+		if ((j != -1) && (tl.getIsNumericAttributes().get(j) == true)){
 			float minval = 999999;
 			float maxval = -1;
 			
 			for(Transaction t : tl){
 				float v = -1;
-				String aa = t.getSet().get(j).toString();
+				String aa = t.getValues().get(j).toString();
 				String[] aaa = aa.split("=",2);
 				String aaaa = aaa[1];
 				if(NumberUtils.isNumber(aaaa)){
@@ -84,7 +86,7 @@ public class FileParser {
 				Transaction t = new Transaction();
 				for(int k = 0; k < nbAttr - 1; k++){					
 					t = tl.get(i);	
-					String bb = t.getSet().get(j).toString();
+					String bb = t.getValues().get(j).toString();
 					String[] bbb = bb.split("=",2);
 					String title = bbb[0];
 					String value = bbb[1];
@@ -99,32 +101,31 @@ public class FileParser {
 					}
 					t.add(addedAttr);
 					if(k == nbAttr - 2){
-						t.getSet().remove(j);
+						t.getValues().remove(j);
 						res.add(t);
 					}
 				}
 			}
-			boolean n = isNumericAttributes.get(j);
-			isNumericAttributes.remove(j);
-			isNumericAttributes.add(false);
-			attributesName.remove(s);
-			attributesName.add(s);			
+			boolean n = tl.getIsNumericAttributes().get(j);
+			tl.getIsNumericAttributes().remove(j);
+			tl.getIsNumericAttributes().add(false);
+			tl.getAttributesName().remove(s);
+			tl.getAttributesName().add(s);
 		}
+		res.setAttributesName(tl.getAttributesName());
+		res.setIsNumericAttributes(tl.getIsNumericAttributes());
 		return res;
 	}
 	
-	public TransactionList allNumToBool(TransactionList tl, int[] nbNewAttrPerAttr){
+	public void allNumToBool(TransactionList tl, int[] nbNewAttrPerAttr){
 		ArrayList<String> tmp = new ArrayList<String>();
-		for(int i = 0; i < isNumericAttributes.size(); i++){
-			if(isNumericAttributes.get(i))
-				tmp.add(attributesName.get(i));
+		for(int i = 0; i < tl.getIsNumericAttributes().size(); i++){
+			if(tl.getIsNumericAttributes().get(i))
+				tmp.add(tl.getAttributesName().get(i));
 		}
-		TransactionList res = new TransactionList();
-		res = tl;
 		for(int j = 0; j < tmp.size(); j++){
-			res = numericAttrToBool(res, tmp.get(j), nbNewAttrPerAttr[j]);
+			tl = numericAttrToBool(tl, tmp.get(j), nbNewAttrPerAttr[j]);
 		}
-		return res;
 	}
 	
 }
