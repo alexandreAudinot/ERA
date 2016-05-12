@@ -132,8 +132,8 @@ public class MainFrame extends JFrame {
             @Override
             public void startAlgo(double minsup, double minconf, int[] ranges) {
                 parser.allNumToBool(transactions, ranges);
-
-                Set<Rule> rules = new APriori(minsup, minconf, transactions).generateRules();
+                APriori algo = new APriori(minsup, minconf, transactions);
+                Set<Rule> rules = algo.generateRules();
                 ArrayList<Rule> sortedRules = new ArrayList<Rule>(rules.size());
                 sortedRules.addAll(rules);
                 Rule.sortByConfidence(sortedRules);

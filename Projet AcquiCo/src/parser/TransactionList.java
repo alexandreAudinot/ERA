@@ -2,6 +2,8 @@ package parser;
 
 import java.util.ArrayList;
 
+import algorithm.APriori.EItemsetType;
+
 public class TransactionList extends ArrayList<Transaction> {
 	private static final long serialVersionUID = -8878030961190729009L;
 
@@ -9,6 +11,15 @@ public class TransactionList extends ArrayList<Transaction> {
 	private ArrayList<Boolean> isNumericAttributes;
 	private int nbNumericAttribute;
 	private ArrayList<Integer> numberOfRange = new ArrayList<>();
+	private EItemsetType itemsetType;
+
+	public EItemsetType getItemsetType() {
+		return itemsetType;
+	}
+
+	public void setItemsetType(EItemsetType itemsetType) {
+		this.itemsetType = itemsetType;
+	}
 
 	public ArrayList<String> getAttributesName() {
 		return attributesName;
@@ -41,4 +52,6 @@ public class TransactionList extends ArrayList<Transaction> {
 	public int getNbNumericAttribute() {
 		return nbNumericAttribute;
 	}
+	
+	
 }

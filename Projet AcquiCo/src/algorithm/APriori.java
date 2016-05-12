@@ -1,16 +1,24 @@
 package algorithm;
 
 import java.beans.FeatureDescriptor;
+import java.lang.annotation.ElementType;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import parser.Transaction;
 import parser.TransactionList;
 
 public class APriori {
+	public enum EItemsetType {
+		Frequent,
+		Maximal,
+		Closed
+	};
+	
 	private TransactionList allTransactions;
 
 	private final Set<String> allItems;
@@ -127,7 +135,14 @@ public class APriori {
 	 * @return 
 	 */
 	public Set<Rule> generateRules(){
+		EItemsetType type = allTransactions.getItemsetType();
+		
 		frequents = getFrequentItemsets();
+		if(type == EItemsetType.Closed)	
+			frequents = (Set<Set<String>>) getClosedFrequetItemsets();
+		else if (type == EItemsetType.Maximal)
+			frequents = (Set<Set<String>>) getMaximalFrequetItemsets();
+		
 		Set<Rule> ruleList = new HashSet<Rule>();
 
 		//For each kitemset frequent
@@ -158,7 +173,7 @@ public class APriori {
 		return ruleList;
 	}
 
-	public ArrayList<ArrayList<String>> getClosedFrequetItemsets(){
+	public Object getClosedFrequetItemsets(){
 		ArrayList<ArrayList<String>> freq = new ArrayList<>();
 		for(Set<String> s : frequents){
 			freq.add(new ArrayList<String>(s));
@@ -178,10 +193,16 @@ public class APriori {
 				}
 			}
 		}
-		return res;
+		
+		HashSet<HashSet<String>> ret = new HashSet<HashSet<String>>();
+		for(ArrayList<String> tmp : res) {
+			ret.add(new HashSet<String>(tmp));
+		}
+		
+		return ret;
 	}
 	
-	public ArrayList<ArrayList<String>> getMaximalFrequetItemsets(){
+	public Object getMaximalFrequetItemsets(){
 		ArrayList<ArrayList<String>> freq = new ArrayList<>();
 		for(Set<String> s : frequents){
 			freq.add(new ArrayList<String>(s));
@@ -190,14 +211,20 @@ public class APriori {
 		for(int i = 0; i < freq.size(); i++){
 			for(int j = 0; j < freq.size(); j++){
 				if(i!=j){
-					if((freq.get(j).size() == freq.get(i).size()+1) && freq.get(j).containsAll(freq.get(i))){
+					if((freq.get(j).size() == freq.get(i).size()+1) && (!freq.get(j).containsAll(freq.get(i)))){
 						if(!res.contains(freq.get(i)))
-							res.add(freq.get(i));
+							res.add(freq.get(i));		
 					}
 				}
 			}
 		}
-		return res;
+		
+		HashSet<HashSet<String>> ret = new HashSet<HashSet<String>>();
+		for(ArrayList<String> tmp : res) {
+			ret.add(new HashSet<String>(tmp));
+		}
+		
+		return ret;
 	}
 	
 	private double getConf(Collection<String> from, String to) {
