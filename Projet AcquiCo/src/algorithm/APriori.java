@@ -181,6 +181,25 @@ public class APriori {
 		return res;
 	}
 	
+	public ArrayList<ArrayList<String>> getMaximalFrequetItemsets(){
+		ArrayList<ArrayList<String>> freq = new ArrayList<>();
+		for(Set<String> s : frequents){
+			freq.add(new ArrayList<String>(s));
+		}		
+		ArrayList<ArrayList<String>> res = new ArrayList<>();
+		for(int i = 0; i < freq.size(); i++){
+			for(int j = 0; j < freq.size(); j++){
+				if(i!=j){
+					if((freq.get(j).size() == freq.get(i).size()+1) && freq.get(j).containsAll(freq.get(i))){
+						if(!res.contains(freq.get(i)))
+							res.add(freq.get(i));
+					}
+				}
+			}
+		}
+		return res;
+	}
+	
 	private double getConf(Collection<String> from, String to) {
 		double nbFrom = 0, nbAll = 0;
 
