@@ -35,7 +35,7 @@ public class APriori {
 		Set<String> items = new HashSet<String>();
 
 		for (Transaction t : this.allTransactions) {
-			for (String i : t.getSet()) {
+			for (String i : t.getValues()) {
 				if (! items.contains(i)) {
 					items.add(i);
 				}
@@ -100,7 +100,7 @@ public class APriori {
 		int res = 0;
 
 		for (Transaction t : this.allTransactions) {
-			if (t.getSet().containsAll(itemset)) {
+			if (t.getValues().containsAll(itemset)) {
 				res++;
 			}
 		}
@@ -162,10 +162,10 @@ public class APriori {
 		all.add(to);
 
 		for (Transaction t : this.allTransactions) {
-			if(t.getSet().containsAll(from))
+			if(t.getValues().containsAll(from))
 				nbFrom++;
 
-			if(t.getSet().containsAll(all))
+			if(t.getValues().containsAll(all))
 				nbAll++;
 		}
 
@@ -180,13 +180,13 @@ public class APriori {
 		all.add(to);
 
 		for (Transaction t : this.allTransactions) {
-			if(t.getSet().containsAll(from))
+			if(t.getValues().containsAll(from))
 				nbFrom++;
 
-			if(t.getSet().contains(to))
+			if(t.getValues().contains(to))
 				nbTo++;
 
-			if(t.getSet().containsAll(all))
+			if(t.getValues().containsAll(all))
 				nbAll++;
 		}
 

@@ -4,8 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Set;
 
 import javax.swing.JFrame;
@@ -19,11 +17,13 @@ import javax.swing.WindowConstants;
 import algorithm.APriori;
 import algorithm.Rule;
 import parser.FileParser;
+import parser.Transaction;
 import parser.TransactionList;
 import ui.steps.config.ConfigStepPanel;
 import ui.steps.config.OnStartAlgo;
 import ui.steps.load.LoadStepPanel;
 import ui.steps.load.OnFileChosen;
+import ui.steps.load.OnGoToConfiguration;
 import ui.steps.result.ResultStepPanel;
 
 public class MainFrame extends JFrame {
@@ -46,7 +46,7 @@ public class MainFrame extends JFrame {
 
     public void start() {
         setLocationRelativeTo(null);
-        setSize(500, 350);
+        setSize(700, 500);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("INSA - Extracteur de rÃ¨gles d'association");
 
@@ -112,21 +112,27 @@ public class MainFrame extends JFrame {
         //Load Panel
         loadStepPanel.setOnFileChosenListener(new OnFileChosen() {
 			@Override
-			public void fileChosen(File selectedFile) {
-				TransactionList transactionstmp = parser.readFile(selectedFile.getAbsolutePath());
-				// Pour chaque attribut numérique, on lui donne un nombre d'attributs booléens
-				int[] tab = {4,2,2,2};
-				transactions = parser.allNumToBool(transactionstmp, tab);
-				transactions.toString();
-				
-	            allowSteps(true, true, false, 1);
+			public TransactionList fileChosen(File selectedFile) {
+                transactions = parser.readFile(selectedFile.getAbsolutePath());
+                return transactions;
+
 			}
 		});
+
+        loadStepPanel.setOnGoToConfiguration(new OnGoToConfiguration() {
+            @Override
+            public void goToConfiguration() {
+                configStepPanel.setTransactionList(transactions);
+                allowSteps(true, true, false, 1);
+            }
+        });
 
         //Config Panel
         configStepPanel.setOnStartAlgo(new OnStartAlgo() {
             @Override
-            public void startAlgo(double minsup, double minconf) {
+            public void startAlgo(double minsup, double minconf, int[] ranges) {
+                parser.allNumToBool(transactions, ranges);
+
                 Set<Rule> rules = new APriori(minsup, minconf, transactions).generateRules();
                 ArrayList<Rule> sortedRules = new ArrayList<Rule>(rules.size());
                 sortedRules.addAll(rules);

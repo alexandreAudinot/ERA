@@ -1,7 +1,9 @@
 package ui.steps.load;
 
+import parser.TransactionList;
+
 import java.io.File;
 
 public interface OnFileChosen {
-    void fileChosen(File selectedFile);
+    TransactionList fileChosen(File selectedFile);
 }
